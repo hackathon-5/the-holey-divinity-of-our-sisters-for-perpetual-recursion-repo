@@ -2,17 +2,31 @@
   (:require [bmihw.common :refer [auth fb]]
             [reagent-forms.core :refer [bind-fields]]))
 
-(defn update-state! [state key e]
-  (swap! state assoc key (-> e .-target .-value)))
+(defn update-state! [state-atom key e]
+  (swap! state-atom assoc key (-> e .-target .-value)))
 
-(defn submit-to-fb! [state]
-  (.push fb
-    (clj->js (merge @state
-                    (select-keys @auth ["uid" "provider"])
-                    (select-keys (get @auth "twitter") ["accessToken" "accessTokenSecret" "username"])))
-    (fn [error]
-      (when error
-        (js/alert (str "An error occurred: " error))))))
+(defn success! []
+  (doseq [elem (-> js/document (.querySelectorAll "input") array-seq)]
+    (set! (.-value elem) ""))
+  (js/alert "YOU SUBMITTED SUCCESSFULLY."))
+
+(defn submit-to-fb! [{:keys [target-username keyword content] :as state}]
+  (cond
+    (not (or target-username keyword))
+    (js/alert "YOU NEED A USERNAME OR KEYWORD.")
+    
+    (not content)
+    (js/alert "YOU NEED CONTENT.")
+    
+    :else
+    (.push fb
+      (clj->js (merge state
+                      (select-keys @auth ["uid" "provider"])
+                      (select-keys (get @auth "twitter") ["accessToken" "accessTokenSecret" "username"])))
+      (fn [error]
+        (if error
+          (js/alert (str "ERROR: " error))
+          (success!))))))
 
 (defn submit-page []
   (let [state (atom {})]
@@ -28,5 +42,5 @@
                      :on-change #(update-state! state :content %)}]
             [:br]
             [:button {:id "submit" :class "control"
-                      :on-click #(submit-to-fb! state)}
+                      :on-click #(submit-to-fb! @state)}
              "Submit"]]]]))
