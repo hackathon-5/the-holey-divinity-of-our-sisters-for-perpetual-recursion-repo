@@ -19,7 +19,9 @@
                  [org.clojure/clojurescript "1.7.107" :scope "provided"]
                  [secretary "1.2.3"]
                  [cljsjs/firebase "2.2.7-1"]
-                 [cljs-ajax "0.3.14"]]
+                 [cljs-ajax "0.3.14"]
+                 [twitter-api "0.7.8"]
+                 [org.apache.httpcomponents/httpclient "4.5"]]
 
   :plugins [[lein-environ "1.0.0"]
             [lein-asset-minifier "0.2.2"]]

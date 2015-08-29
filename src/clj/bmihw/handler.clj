@@ -39,7 +39,7 @@
 
 (defroutes routes
   (GET "/" [] home-page)
-  (GET "/twitter-friends" {{:keys [username]} :params} (twitter-friends username))
+  (GET "/twitter-friends" {:keys [params]} (twitter-friends params))
   (resources "/")
   (not-found "Not Found"))
 
