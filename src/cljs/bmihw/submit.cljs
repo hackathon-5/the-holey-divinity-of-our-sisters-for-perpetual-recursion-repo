@@ -11,10 +11,10 @@
   (js/alert "YOU SUBMITTED SUCCESSFULLY."))
 
 (defn submit-to-fb! []
-  (let [target-username (.-value (.querySelector js/document "#username"))
-        keyword (.-value (.querySelector js/document "#keyword"))
-        content (.-value (.querySelector js/document "#content"))
-        ;;drunk (.-checked (.querySelector js/document "#drunk"))
+  (let [provider (get @auth "provider")
+        target-username (.-value (.querySelector js/document (str "#" provider "-username")))
+        keyword (.-value (.querySelector js/document (str "#" provider "-keyword")))
+        content (.-value (.querySelector js/document (str "#" provider "-content")))
         state {:target-username target-username
                :keyword keyword
                :content content
@@ -30,7 +30,7 @@
       (.push fb
         (clj->js (merge state
                         (select-keys @auth ["uid" "provider"])
-                        (select-keys (get @auth "twitter") ["accessToken" "accessTokenSecret" "username"])))
+                        (select-keys (get @auth provider) ["accessToken" "accessTokenSecret" "username"])))
         (fn [error]
           (if error
             (js/alert (str "ERROR: " error))
@@ -42,6 +42,8 @@
 
 (defn friends-component [friends-edn]
   [:div
+   "Quickly set a user:"
+   [:br]
    (for [friend friends-edn]
      [:button {:on-click #(set-name! (:screen_name friend))}
       [:img {:src (:profile_image_url friend)}]
@@ -59,30 +61,48 @@
                        (render-component [friends-component response-edn]
                                          (.querySelector js/document "#twitter-friends")))))
         :error-handler (fn [{:keys [status status-text]}]
-                         (js/alert (str "ERROR: " status " " status-text)))}))
+                         (js/alert (str "ERROR: " status " " status-text)))})
+  nil)
 
 (defn submit-page []
-  (get-friends!)
   [:div [:h2 "Schedule your insult."]
    [:div
     [:div
-     "When a tweet is sent by "
-     [:input {:id "username" :type :text :name :target-username :placeholder "Username" :class "control small"}]
-     [:br]
-     "and/or a tweet contains "
-     [:input {:id "keyword" :type :text :name :keyword :placeholder "Keyword" :class "control small"}]
-     [:br]
-     "write the following tweet:"
-     [:br]
-     [:input {:id "content" :type :text :name :content :placeholder "Content" :class "control big"}]
-     [:br]
-     [:button {:id "submit" :class "control"
-               :on-click submit-to-fb!}
-      "SCHEDULE IT!"]
-     [:br]
-     [:br]
-     "Quickly set a user:"
-     [:br]
-     [:div {:id "twitter-friends"}]]
+     (case (get @auth "provider")
+       "twitter"
+       [:div
+        "When a tweet is sent by "
+        [:input {:id "twitter-username" :type :text :placeholder "Username" :class "control small"}]
+        [:br]
+        "and/or a tweet contains "
+        [:input {:id "twitter-keyword" :type :text :placeholder "Keyword" :class "control small"}]
+        [:br]
+        "write the following tweet:"
+        [:br]
+        [:input {:id "twitter-content" :type :text :placeholder "Content" :class "control big"}]
+        [:br]
+        [:button {:id "submit" :class "control" :on-click submit-to-fb!}
+         "SCHEDULE IT!"]
+        [:br]
+        [:div {:id "twitter-friends"}
+         (get-friends!)]]
+       
+       "github"
+       [:div
+        "When a commit is made by "
+        [:input {:id "github-username" :type :text :placeholder "Username" :class "control small"}]
+        [:br]
+        "and a commit contains "
+        [:input {:id "github-keyword" :type :text :placeholder "Keyword" :class "control small"}]
+        [:br]
+        "write the following issue:"
+        [:br]
+        [:input {:id "github-content" :type :text :placeholder "Content" :class "control big"}]
+        [:br]
+        [:button {:id "submit" :class "control" :on-click submit-to-fb!}
+         "SCHEDULE IT!"]]
+       
+       ; else
+       [:a {:href "/"} "Return to home."])]
     [:br]
     [:div [:a {:href "#/manage"} "Manage Submissions"]]]])
