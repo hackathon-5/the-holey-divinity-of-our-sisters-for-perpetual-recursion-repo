@@ -15,7 +15,7 @@
 ;; -------------------------
 ;; HOME - LOGIN PAGE
 ;; -------------------------
-(defn auth-twitter-handler
+(defn auth-handler
   [error, authData]
   (if error
     (reset! auth error)
@@ -25,9 +25,11 @@
 
 (defn auth-twitter
   []
-  (.authWithOAuthPopup fb
-                       "twitter"
-                       auth-twitter-handler))
+  (.authWithOAuthPopup fb "twitter" auth-handler))
+
+(defn auth-github
+  []
+  (.authWithOAuthPopup fb "github" auth-handler))
 
 (defn home-page
   []
@@ -36,8 +38,12 @@
    [:p "Are you ready to intelligently express what a bunch of dumbasses the rest of the world is?  Well, are you?"]
    (if @auth
      (session/put! :current-page #'submit/submit-page)
-     [:button.btn.btn-primary.btn-lg {:on-click #(auth-twitter)}
-      "Login"])])
+     [:div
+      [:button.btn.btn-primary.btn-lg {:on-click auth-twitter}
+       "Login with Twitter"]
+      " "
+      [:button.btn.btn-primary.btn-lg {:on-click auth-github}
+       "Login with Github"]])])
 
 (defn current-page []
   [:div [(session/get :current-page)]])
