@@ -11,11 +11,24 @@
 (def stuff (atom nil))
 (def fb (js/Firebase. "https://bmihw.firebaseio.com"))
 
+;; -------------------------
+;; WHO KEYWORD
+;; -------------------------
+(defn who-keyword-page
+  []
+  [:div [:h2 "WHO KEYWORD"]
+   [:div [:a {:href "#/"} "go to the home page"]]])
+
+;; -------------------------
+;; HOME - LOGIN PAGE
+;; -------------------------
 (defn auth-twitter-handler
   [error, authData]
   (if error
     (reset! stuff error)
-    (reset! stuff authData)))
+    (do
+      (reset! stuff authData)
+      (session/put! :current-page #'who-keyword-page))))
 
 (defn auth-twitter
   []
@@ -23,16 +36,17 @@
                        "twitter"
                        auth-twitter-handler))
 
-;; -------------------------
-;; Views
-(defn home-page []
+(defn home-page
+  []
   [:div [:h2 "Welcome to bmihw"]
-   [:input {:type "button" :value "Login"
-            :on-click #(auth-twitter)}]
-   [:div @stuff]
+   (if @stuff
+     (session/put! :current-page #'who-keyword-page)
+     [:input {:type "button" :value "Login"
+              :on-click #(auth-twitter)}])
    [:div [:a {:href "#/about"} "go to about page"]]])
 
-(defn about-page []
+(defn about-page
+  []
   [:div [:h2 "About bmihw"]
    [:div [:a {:href "#/"} "go to the home page"]]])
 
