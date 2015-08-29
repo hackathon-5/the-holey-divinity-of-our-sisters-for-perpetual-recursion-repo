@@ -1,5 +1,6 @@
 (ns bmihw.submit
   (:require [bmihw.common :refer [auth fb]]
+            [reagent-forms.core]
             [ajax.core :refer [GET]]))
 
 (defn update-state! [state-atom key e]
