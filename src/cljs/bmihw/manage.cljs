@@ -20,13 +20,13 @@
   [{id :id user "username" target "target-username" keyword "keyword" content "content" :as event}]
   (let [current-user (get-in @auth ["twitter" "username"])]
     (.log js/console (str "Event User: " user ", Current User:" current-user))
-    (if (= user current-user)
-      (swap! events conj {:id id 
-                          :user user 
-                          :keyword keyword
-                          :target target
-                          :drunk (drunk? event)
-                          :content content}))))
+    #_(if (= user current-user))
+       (swap! events conj {:id id 
+                           :user user 
+                           :keyword keyword
+                           :target target
+                           :drunk (drunk? event)
+                           :content content})));;)
 
 (defn handle-childsnapshot
   [snapshot]
@@ -35,8 +35,12 @@
     (if val
       (add-event (merge {:id key} (js->clj val))))))
 
-(.on fb "child_added" handle-childsnapshot)
-    
+(defn delete-page
+  []
+  [:div 
+   [:p "Always do sober what you said you'd do drunk. That will teach you to keep your mouth shut."]
+   [:i "- Ernest Hemmingway"]])
+
 (defn manage-page
   []
   (let [who (get-in auth ["uid"])]
@@ -45,14 +49,18 @@
 	    [:tr
 	     [:th "Drunk"][:th "Event"][:th "Insult"][:th "Keyword"] [:td who]]
      (for [event @events]
-       [:tr 
+       [:tr {:key (:id event)}
         [:td (or (and (:drunk event) "Hell Yeah!") "Nope")]
         [:td (:target event)]
         [:td (:content event)]
         [:td (:keyword event)]
-        [:td [:input {:type :button :value "Delete"}]]])]]))
+        [:td [:a {:href "#/delete"} "Delete"]]])]]))
 
+(.on fb "child_added" handle-childsnapshot)
 
 (secretary/defroute "/manage" []
   (session/put! :current-page #'manage-page))
+
+(secretary/defroute "/delete" []
+  (session/put! :current-page #'delete-page))
 
