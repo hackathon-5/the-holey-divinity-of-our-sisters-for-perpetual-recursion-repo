@@ -1,6 +1,6 @@
 (ns bmihw.submit
   (:require [bmihw.common :refer [auth fb]]
-            [reagent-forms.core :refer [bind-fields]]))
+            [ajax.core :refer [GET]]))
 
 (defn update-state! [state-atom key e]
   (swap! state-atom assoc key (-> e .-target .-value)))
@@ -28,22 +28,36 @@
           (js/alert (str "ERROR: " error))
           (success!))))))
 
+(defn get-friends! []
+  (GET "/twitter-friends"
+       {:params {:username (get-in @auth ["twitter" "username"])}
+        :handler (fn [response-str]
+                   (let [response-edn (cljs.reader/read-string response-str)]
+                     (.log js/console response-edn)))
+        :error-handler (fn [{:keys [status status-text]}]
+                         (js/alert (str "ERROR: " status " " status-text)))}))
+
 (defn submit-page []
+  (get-friends!)
   (let [state (atom {})]
-    [:div [:h2 "Submit your insult."]
+    [:div [:h2 "Schedule your insult."]
      [:div [:div
-            [:input {:type :text :name :target-username :placeholder "Username" :class "control"
+            "When a tweet is sent by "
+            [:input {:type :text :name :target-username :placeholder "Username" :class "control small"
                      :on-change #(update-state! state :target-username %)}]
             [:br]
-            [:input {:type :text :name :keyword :placeholder "Keyword" :class "control"
+            "and/or a tweet contains "
+            [:input {:type :text :name :keyword :placeholder "Keyword" :class "control small"
                      :on-change #(update-state! state :keyword %)}]
             [:br]
-            [:input {:type :text :name :content :placeholder "Content" :class "control"
+            "write the following tweet:"
+            [:br]
+            [:input {:type :text :name :content :placeholder "Content" :class "control big"
                      :on-change #(update-state! state :content %)}]
             [:br]
             [:button {:id "submit" :class "control"
                       :on-click #(submit-to-fb! @state)}
-             "Submit"]]
+             "SCHEDULE IT!"]]
 				   [:br]
 				   [:br] 
 				   [:div [:a {:href "#/manage"} "Manage Submissions"]]]]))

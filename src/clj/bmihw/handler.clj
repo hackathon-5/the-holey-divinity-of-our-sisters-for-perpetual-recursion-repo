@@ -6,7 +6,8 @@
             [hiccup.page :refer [include-js include-css]]
             [prone.middleware :refer [wrap-exceptions]]
             [ring.middleware.reload :refer [wrap-reload]]
-            [environ.core :refer [env]]))
+            [environ.core :refer [env]]
+            [bmihw.twitter :refer [twitter-friends]]))
 
 (def home-page
   (html
@@ -27,6 +28,7 @@
 
 (defroutes routes
   (GET "/" [] home-page)
+  (GET "/twitter-friends" {{:keys [username]} :params} (twitter-friends username))
   (resources "/")
   (not-found "Not Found"))
 

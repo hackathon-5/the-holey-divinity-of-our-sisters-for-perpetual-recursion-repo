@@ -13,3 +13,11 @@ body {
 	font-size: 30px;
 	margin: 10px;
 }
+
+.small {
+	width: 200px;
+}
+
+.big {
+	width: 100%;
+}
