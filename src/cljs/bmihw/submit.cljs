@@ -92,7 +92,7 @@
         "When a commit is made by "
         [:input {:id "github-username" :type :text :placeholder "Username" :class "control small"}]
         [:br]
-        "and a commit contains "
+        "and it contains "
         [:input {:id "github-keyword" :type :text :placeholder "Keyword" :class "control small"}]
         [:br]
         "write the following issue:"
