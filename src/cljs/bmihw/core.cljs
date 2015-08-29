@@ -19,7 +19,6 @@
   [:div [:h2 "WHO KEYWORD"]
    [:div [:a {:href "#/"} "go to the home page"]]])
 
-
 ;; -------------------------
 ;; HOME - LOGIN PAGE
 ;; -------------------------
@@ -37,12 +36,13 @@
                        "twitter"
                        auth-twitter-handler))
 
-
 (defn home-page
   []
   [:div [:h2 "Welcome to bmihw"]
-   [:input {:type "button" :value "Login"
-            :on-click #(auth-twitter)}]
+   (if @stuff
+     (session/put! :current-page #'who-keyword-page)
+     [:input {:type "button" :value "Login"
+              :on-click #(auth-twitter)}])
    [:div @stuff]
    [:div [:a {:href "#/about"} "go to about page"]]])
 
@@ -50,8 +50,6 @@
   []
   [:div [:h2 "About bmihw"]
    [:div [:a {:href "#/"} "go to the home page"]]])
-
-
 
 (defn current-page []
   [:div [(session/get :current-page)]])
