@@ -30,7 +30,7 @@
 
 (defn home-page
   []
-  [:div.jumbotron 
+  [:div.jumbotron
    [:h1 "Welcome"]
    [:p "Are you ready to intelligently express what a bunch of dumbasses the rest of the world is?  Well, are you?"]
    (if @auth

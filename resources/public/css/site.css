@@ -2,15 +2,19 @@ body {
 	font-family: 'Helvetica Neue', Verdana, Helvetica, Arial, sans-serif;
 	max-width: 600px;
 	margin: 0 auto;
+	padding-top: 72px;
 	-webkit-font-smoothing: antialiased;
 	color: #333;
 	line-height: 1.5em;
-	font-size: 30px;
+	font-size: 20px;
+}
+
+.jumbotron {
+	text-align: center;
 }
 
 .control {
-	font-size: 30px;
-	margin: 10px;
+	margin: 5px;
 }
 
 .small {
