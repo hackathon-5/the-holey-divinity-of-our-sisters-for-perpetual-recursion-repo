@@ -10,6 +10,7 @@
     (:import goog.History))
 
 (def events (reagent/atom []))
+(def current-event (reagent/atom nil))
 
 (defn drunk?
   [{drunk "drunk" :as event}]
@@ -35,11 +36,37 @@
     (if val
       (add-event (merge {:id key} (js->clj val))))))
 
+(declare manage-page)
+
 (defn delete-page
   []
-  [:div 
-   [:p "Always do sober what you said you'd do drunk. That will teach you to keep your mouth shut."]
-   [:i "- Ernest Hemmingway"]])
+  (if-let [drunk (:drunk @current-event)]
+    [:div 
+     [:p "NOPE!!!"]
+     [:p "Always do sober what you said you'd do drunk. That will teach you to keep your mouth shut."]
+     [:i "- Ernest Hemmingway"]
+     [:br]
+     [:br]
+     [:div [:a {:href "#/manage"
+                :on-click (fn [e] 
+                            (reset! current-event nil)
+                            (session/put! :current-page #'manage-page))} "Back To Manage Submissions"]]]
+    [:div
+     [:p "Are you sure you want to hide the evidence?"]
+     [:a {:href "#/manage"
+                :on-click (fn [e]
+                            (let [id (:id @current-event)
+                                  ref (.child fb id)
+                                  clean-events (filter (fn [e] (not (= id (:id e))))  @events)]
+                              (.remove ref)
+                              (reset! events clean-events)
+                              (reset! current-event nil)
+                              (session/put! :current-page #'manage-page)))} "Yes, I'm a pussy."]
+     [:a {:href "#/manage"
+                :on-click (fn [e] 
+                            (reset! current-event nil)
+                            (session/put! :current-page #'manage-page))} "Hell No!."]]))
+  
 
 (defn manage-page
   []
@@ -54,13 +81,13 @@
         [:td (:target event)]
         [:td (:content event)]
         [:td (:keyword event)]
-        [:td [:a {:href "#/delete"} "Delete"]]])]]))
+        [:td [:input {:type "button" 
+                      :value "Delete" 
+                      :on-click (fn [e] 
+                                  (reset! current-event event)
+                                  (session/put! :current-page #'delete-page))}]]])]]))
 
 (.on fb "child_added" handle-childsnapshot)
 
 (secretary/defroute "/manage" []
   (session/put! :current-page #'manage-page))
-
-(secretary/defroute "/delete" []
-  (session/put! :current-page #'delete-page))
-
