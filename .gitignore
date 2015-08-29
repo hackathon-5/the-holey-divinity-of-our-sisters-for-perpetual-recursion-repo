@@ -1,0 +1,10 @@
+/bin/
+.project
+.settings
+.classpath
+.lein-env
+.lein-repl-history
+.project
+figwheel_server.log
+target
+resources/public/js/
