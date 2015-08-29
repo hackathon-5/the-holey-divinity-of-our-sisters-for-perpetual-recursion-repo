@@ -18,10 +18,10 @@
                :keyword keyword
                :content content}]
     (cond
-      (not (or target-username keyword))
+      (not (or (seq target-username) (seq keyword)))
       (js/alert "YOU NEED A USERNAME OR KEYWORD.")
       
-      (not content)
+      (not (seq content))
       (js/alert "YOU NEED CONTENT.")
       
       :else
