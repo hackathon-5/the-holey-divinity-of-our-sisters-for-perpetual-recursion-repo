@@ -23,6 +23,7 @@
                  [cljs-ajax "0.3.14"]
                  [com.firebase/firebase-client-jvm "2.3.1"]
                  [twitter-api "0.7.8"]
+                 [twitter-streaming-client "0.3.3"]
                  [org.apache.httpcomponents/httpclient "4.5"]]
 
   :plugins [[lein-environ "1.0.0"]

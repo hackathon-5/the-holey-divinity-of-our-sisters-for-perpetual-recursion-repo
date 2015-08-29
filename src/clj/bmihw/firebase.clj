@@ -12,10 +12,10 @@
                             (onChildAdded [snapshot previousChildName]
                               (let [insult (->> snapshot
                                                 .getValue
-                                                (into {}))]
+                                                (into {}))
+                                    provider (get insult "provider")]
                                 (println "INSULT: " (pr-str insult) )
-                                (cond = (:provider insult)
-                                      "twitter" (twitter/troll insult)
-                                      "github" (println "NOT SO FAST"))
-
-                                (-> snapshot .getRef .removeValue))))))
+                                (println "PROVIDER:" (get insult "provider"))
+                                (condp = provider
+                                  "twitter" (twitter/troll snapshot insult)
+                                  "github" (println "NOT SO FAST")))))))
