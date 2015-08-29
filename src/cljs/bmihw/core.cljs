@@ -30,11 +30,12 @@
 
 (defn home-page
   []
-  [:div [:h2 "Welcome to bmihw"]
+  [:div.jumbotron 
+   [:h1 "Welcome"]
+   [:p "Are you ready to intelligently express what a bunch of dumbasses the rest of the world is?  Well, are you?"]
    (if @auth
      (session/put! :current-page #'submit/submit-page)
-     [:button {:class "control"
-               :on-click #(auth-twitter)}
+     [:button.btn.btn-primary.btn-lg {:on-click #(auth-twitter)}
       "Login"])])
 
 (defn current-page []

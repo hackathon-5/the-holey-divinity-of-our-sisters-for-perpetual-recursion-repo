@@ -78,9 +78,8 @@
 (defn manage-page
   []
   (let [who (get-in auth ["uid"])]
-	  [:div.panel.panel-default 
-     [:div.panel-heading 
-      [:h3.panel-title "Manage Your Insults To Those Deserving Bastards!"]]
+	  [:div 
+     [:h3.panel-title "Manage Your Insults To Those Deserving Bastards!"]
      [:div.panel-body
 	   [:table#manage.table {:style {:width "100%"}}
 	    [:tr
