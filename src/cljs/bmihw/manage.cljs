@@ -36,6 +36,12 @@
     (if val
       (add-event (merge {:id key} (js->clj val))))))
 
+(defn handle-childsnapshot-remove
+  [snapshot]
+  (let [id (.key snapshot)
+        clean-events (filter (fn [e] (not (= id (:id e))))  @events)]
+    (reset! events clean-events)))
+
 (declare manage-page)
 
 (defn delete-page
@@ -63,10 +69,8 @@
 		     [:a.btn.btn-default {:href "#/manage"
 	           :on-click (fn [e]
 		                      (let [id (:id @current-event)
-		                            ref (.child fb id)
-		                            clean-events (filter (fn [e] (not (= id (:id e))))  @events)]
+		                            ref (.child fb id)]
 		                        (.remove ref)
-		                        (reset! events clean-events)
 		                        (reset! current-event nil)
 		                        (session/put! :current-page #'manage-page)))} "Yes, I'm a pussy."]
 		     [:a.btn.btn-default {:href "#/manage"
@@ -99,6 +103,7 @@
       [:a.btn.btn-default {:href "#/submit"} "Add Another"]]]))
 
 (.on fb "child_added" handle-childsnapshot)
+(.on fb "child_removed" handle-childsnapshot-remove)
 
 (secretary/defroute "/manage" []
   (session/put! :current-page #'manage-page))
