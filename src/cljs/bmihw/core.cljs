@@ -27,7 +27,7 @@
 ;; Views
 (defn home-page []
   [:div [:h2 "Welcome to bmihw"]
-   [:input {:type "button" :value "Auth me!"
+   [:input {:type "button" :value "Login"
             :on-click #(auth-twitter)}]
    [:div @stuff]
    [:div [:a {:href "#/about"} "go to about page"]]])
