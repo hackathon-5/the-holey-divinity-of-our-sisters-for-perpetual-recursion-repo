@@ -37,7 +37,7 @@
             (success!)))))))
 
 (defn set-name! [name]
-  (let [elem (.querySelector js/document "#username")]
+  (let [elem (.querySelector js/document "#twitter-username")]
     (set! (.-value elem) name)))
 
 (defn friends-component [friends-edn]
