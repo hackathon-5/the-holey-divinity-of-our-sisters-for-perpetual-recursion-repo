@@ -5,19 +5,12 @@
               [goog.events :as events]
               [goog.history.EventType :as EventType]
               [ajax.core :refer [GET POST]]
-              [cljsjs.firebase :as firebase])
+              [cljsjs.firebase :as firebase]
+              [bmihw.submit :as submit])
     (:import goog.History))
 
 (def stuff (atom nil))
 (def fb (js/Firebase. "https://bmihw.firebaseio.com"))
-
-;; -------------------------
-;; WHO KEYWORD
-;; -------------------------
-(defn who-keyword-page
-  []
-  [:div [:h2 "WHO KEYWORD"]
-   [:div [:a {:href "#/"} "go to the home page"]]])
 
 ;; -------------------------
 ;; HOME - LOGIN PAGE
@@ -28,7 +21,7 @@
     (reset! stuff error)
     (do
       (reset! stuff authData)
-      (session/put! :current-page #'who-keyword-page))))
+      (session/put! :current-page #'submit/submit-page))))
 
 (defn auth-twitter
   []
@@ -40,7 +33,7 @@
   []
   [:div [:h2 "Welcome to bmihw"]
    (if @stuff
-     (session/put! :current-page #'who-keyword-page)
+     (session/put! :current-page #'submit/submit-page)
      [:input {:type "button" :value "Login"
               :on-click #(auth-twitter)}])
    [:div [:a {:href "#/about"} "go to about page"]]])
