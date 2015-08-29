@@ -8,3 +8,6 @@
 figwheel_server.log
 target
 resources/public/js/
+resources/public/css/
+pom.xml
+
