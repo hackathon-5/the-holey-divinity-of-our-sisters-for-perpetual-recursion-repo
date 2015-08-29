@@ -48,6 +48,9 @@
 (secretary/defroute "/" []
   (session/put! :current-page #'home-page))
 
+(secretary/defroute "/submit" []
+  (session/put! :current-page #'submit/submit-page))
+
 ;; -------------------------
 ;; History
 ;; must be called after routes have been defined

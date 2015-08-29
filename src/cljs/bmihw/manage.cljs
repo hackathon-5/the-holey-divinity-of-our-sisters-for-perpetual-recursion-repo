@@ -81,19 +81,21 @@
 	  [:div 
      [:h3.panel-title "Manage Your Insults To Those Deserving Bastards!"]
      [:div.panel-body
-	   [:table#manage.table {:style {:width "100%"}}
-	    [:tr
-	     [:th "Drunk"][:th "Event"][:th "Insult"][:th "Keyword"] [:td who]]
-     (for [event @events]
-       [:tr {:key (:id event)}
-        [:td (or (and (:drunk event) "Yep") "Nope")]
-        [:td (:target event)]
-        [:td (:content event)]
-        [:td (:keyword event)]
-        [:td [:button.btn.btn-default {:type "button" 
-                                       :on-click (fn [e] 
-                                                   (reset! current-event event)
-                                                   (session/put! :current-page #'delete-page))} "Delete"]]])]]]))
+		   [:table#manage.table {:style {:width "100%"}}
+		    [:tr
+		     [:th "Drunk"][:th "Target Person"][:th "Target Keyword"][:th "Insult"] [:td who]]
+	     (for [event @events]
+	       [:tr {:key (:id event)}
+	        [:td (or (and (:drunk event) "Yep") "Nope")]
+	        [:td (:target event)]
+	        [:td (:keyword event)]
+	        [:td (:content event)]
+	        [:td [:button.btn.btn-default {:type "button" 
+	                                       :on-click (fn [e] 
+	                                                   (reset! current-event event)
+	                                                   (session/put! :current-page #'delete-page))} "Delete"]]])]]
+     [:div.btn-group.btn-group-justified
+      [:a.btn.btn-default {:href "#/submit"} "Add Another"]]]))
 
 (.on fb "child_added" handle-childsnapshot)
 
