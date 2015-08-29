@@ -1,5 +1,5 @@
 (ns bmihw.submit
-  (:require [bmihw.common :refer [auth fb]]
+  (:require [bmihw.common :refer [auth fb drunk?]]
             [reagent.core :refer [render-component]]
             [reagent-forms.core]
             [clojure.string :refer [trim split join]]
@@ -14,11 +14,11 @@
   (let [target-username (.-value (.querySelector js/document "#username"))
         keyword (.-value (.querySelector js/document "#keyword"))
         content (.-value (.querySelector js/document "#content"))
-        drunk (.-checked (.querySelector js/document "#drunk"))
+        ;;drunk (.-checked (.querySelector js/document "#drunk"))
         state {:target-username target-username
                :keyword keyword
                :content content
-               :drunk drunk}]
+               :drunk @drunk?}]
     (cond
       (not (or (seq target-username) (seq keyword)))
       (js/alert "YOU NEED A USERNAME OR KEYWORD.")
@@ -75,9 +75,6 @@
      "write the following tweet:"
      [:br]
      [:input {:id "content" :type :text :name :content :placeholder "Content" :class "control big"}]
-     [:br]
-     [:input {:id "drunk" :type :checkbox :name :drunk :class "control"}]
-     [:label {:for :drunk :style {:margin-left "5px"}} "I am drunk"]
      [:br]
      [:button {:id "submit" :class "control"
                :on-click submit-to-fb!}

@@ -7,6 +7,7 @@
               [ajax.core :refer [GET POST]]
               [cljsjs.firebase :as firebase]
               [bmihw.common :refer [auth fb]]
+              [bmihw.drunk :as drunk]
               [bmihw.manage :as manage]
               [bmihw.submit :as submit])
     (:import goog.History))
@@ -20,7 +21,7 @@
     (reset! auth error)
     (do
       (reset! auth (js->clj authData))
-      (session/put! :current-page #'submit/submit-page))))
+      (session/put! :current-page #'drunk/drunk-page))))
 
 (defn auth-twitter
   []
