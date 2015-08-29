@@ -33,7 +33,7 @@
    (if @auth
      (session/put! :current-page #'submit/submit-page)
      [:button {:class "control"
-              :on-click #(auth-twitter)}
+               :on-click #(auth-twitter)}
       "Login"])])
 
 (defn current-page []

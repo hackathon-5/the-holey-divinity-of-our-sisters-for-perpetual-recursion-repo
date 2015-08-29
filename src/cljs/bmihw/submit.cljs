@@ -3,11 +3,7 @@
             [reagent-forms.core :refer [bind-fields]]))
 
 (defn update-state! [state key e]
-  (let [new-state (swap! state assoc key (-> e .-target .-value))
-        {:keys [username keyword content]} new-state
-        submit (.querySelector js/document "#submit")]
-    (set! (.-disabled submit) (not (and (or (seq username) (seq keyword))
-                                        (seq content))))))
+  (swap! state assoc key (-> e .-target .-value)))
 
 (defn submit-to-fb! [state]
   (.push fb
@@ -31,6 +27,6 @@
             [:input {:type :text :name :content :placeholder "Content" :class "control"
                      :on-change #(update-state! state :content %)}]
             [:br]
-            [:button {:id "submit" :class "control" :disabled true
+            [:button {:id "submit" :class "control"
                       :on-click #(submit-to-fb! state)}
              "Submit"]]]]))
