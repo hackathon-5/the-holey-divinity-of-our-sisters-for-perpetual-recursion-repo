@@ -17,14 +17,18 @@
      [:meta {:charset "utf-8"}]
      [:meta {:name "viewport"
              :content "width=device-width, initial-scale=1"}]
-     (include-css (if (env :dev) "css/site.css" "css/site.min.css"))]
+     (include-css (if (env :dev) "css/site.css" "css/site.min.css"))
+     (include-css (if (env :dev) "css/bootstrap.css" "css/bootstrap.min.css"))
+     (include-css (if (env :dev) "css/bootstrap-theme.css" "css/bootstrap-theme.min.css"))]
     [:body
      [:div#app
       [:h3 "ClojureScript has not been compiled!"]
       [:p "please run "
        [:b "lein figwheel"]
        " in order to start the compiler"]]
-     (include-js "js/app.js")]]))
+     (include-js "js/app.js")
+     (include-js "js/jquery-2.1.4.js")
+     (include-js  (if (env :dev) "js/bootstrap.js" "js/bootstrap.min.js"))]]))
 
 (defroutes routes
   (GET "/" [] home-page)

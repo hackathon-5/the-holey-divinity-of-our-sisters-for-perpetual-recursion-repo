@@ -71,7 +71,8 @@
 (defn manage-page
   []
   (let [who (get-in auth ["uid"])]
-	  [:div [:h4 "Manage Your Insults To Those Deserving Bastards!"]
+	  [:div.panel.panel-default 
+     [:div.panel-heading "Manage Your Insults To Those Deserving Bastards!"]
 	   [:table#manage {:style {:width "100%"}}
 	    [:tr
 	     [:th "Drunk"][:th "Event"][:th "Insult"][:th "Keyword"] [:td who]]
