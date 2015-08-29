@@ -5,6 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
   :dependencies [[org.clojure/clojure "1.7.0"]
+                 [twitter-api "0.7.8"]
                  [ring-server "0.4.0"]
                  [cljsjs/react "0.13.3-1"]
                  [reagent "0.5.1-rc"]
@@ -19,7 +20,11 @@
                  [org.clojure/clojurescript "1.7.107" :scope "provided"]
                  [secretary "1.2.3"]
                  [cljsjs/firebase "2.2.7-1"]
-                 [cljs-ajax "0.3.14"]]
+                 [cljs-ajax "0.3.14"]
+                 [com.firebase/firebase-client-jvm "2.3.1"]
+                 [twitter-api "0.7.8"]
+                 [twitter-streaming-client "0.3.3"]
+                 [org.apache.httpcomponents/httpclient "4.5"]]
 
   :plugins [[lein-environ "1.0.0"]
             [lein-asset-minifier "0.2.2"]]
@@ -38,7 +43,7 @@
                                     [:cljsbuild :builds :app :compiler :output-to]]
 
   :source-paths ["src/clj" "src/cljc"]
-
+  :java-source-paths ["src/java"]
   :minify-assets
   {:assets
     {"resources/public/css/site.min.css" "resources/public/css/site.css"}}
