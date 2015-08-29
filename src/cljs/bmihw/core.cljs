@@ -7,6 +7,7 @@
               [ajax.core :refer [GET POST]]
               [cljsjs.firebase :as firebase]
               [bmihw.common :refer [auth fb]]
+              [bmihw.manage :as manage]
               [bmihw.submit :as submit])
     (:import goog.History))
 
