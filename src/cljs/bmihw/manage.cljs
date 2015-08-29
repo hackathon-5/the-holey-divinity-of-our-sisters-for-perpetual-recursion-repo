@@ -15,7 +15,6 @@
 (defn drunk?
   [{drunk "drunk" :as event}]
   (or (nil? drunk) (= drunk "true") drunk))
-  
 
 (defn add-event
   [{id :id user "username" target "target-username" keyword "keyword" content "content" :as event}]
