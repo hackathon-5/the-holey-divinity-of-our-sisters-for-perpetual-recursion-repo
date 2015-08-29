@@ -6,11 +6,9 @@
               [goog.history.EventType :as EventType]
               [ajax.core :refer [GET POST]]
               [cljsjs.firebase :as firebase]
+              [bmihw.common :refer [stuff fb]]
               [bmihw.submit :as submit])
     (:import goog.History))
-
-(def stuff (atom nil))
-(def fb (js/Firebase. "https://bmihw.firebaseio.com"))
 
 ;; -------------------------
 ;; HOME - LOGIN PAGE

@@ -1,11 +1,17 @@
-(ns bmihw.submit)
+(ns bmihw.submit
+  (:require [bmihw.common :refer [fb]]))
 
-(defn submit-page
-  []
+(defn submit-to-fb []
+  (.log js/console fb))
+
+(defn submit-page []
   [:div [:h2 "Submit your insult."]
-   [:div [:form
+   [:div [:div
           [:input {:type :text :name :username :placeholder "Username"}]
+          [:br]
           [:input {:type :text :name :keyword :placeholder "Keyword"}]
           [:br]
-          [:input {:type "text" :name "value"}]
-          [:input {:type "submit" :value "Submit"}]]]])
+          [:input {:type :text :name :content :placeholder "Content"}]
+          [:br]
+          [:input {:type :submit :value "Submit"
+                   :on-click submit-to-fb}]]]])
