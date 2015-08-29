@@ -43,4 +43,7 @@
             [:br]
             [:button {:id "submit" :class "control"
                       :on-click #(submit-to-fb! @state)}
-             "Submit"]]]]))
+             "Submit"]]
+				   [:br]
+				   [:br] 
+				   [:div [:a {:href "#/manage"} "Manage Submissions"]]]]))
