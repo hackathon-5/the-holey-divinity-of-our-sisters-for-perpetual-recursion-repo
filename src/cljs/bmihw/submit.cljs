@@ -2,9 +2,16 @@
   (:require [bmihw.common :refer [auth fb]]
             [reagent-forms.core :refer [bind-fields]]))
 
-(defn submit-to-fb [state]
+(defn update-state! [state key e]
+  (let [new-state (swap! state assoc key (-> e .-target .-value))
+        {:keys [username keyword content]} new-state
+        submit (.querySelector js/document "#submit")]
+    (set! (.-disabled submit) (not (and (or (seq username) (seq keyword))
+                                        (seq content))))))
+
+(defn submit-to-fb! [state]
   (.push fb
-    (clj->js state)
+    (clj->js @state)
     (fn [error]
       (when error
         (js/alert (str "An error occurred: " error))))))
@@ -14,13 +21,13 @@
     [:div [:h2 "Submit your insult."]
      [:div [:div
             [:input {:type :text :name :username :placeholder "Username"
-                     :on-change #(swap! state assoc :username (-> % .-target .-value))}]
+                     :on-change #(update-state! state :username %)}]
             [:br]
             [:input {:type :text :name :keyword :placeholder "Keyword"
-                     :on-change #(swap! state assoc :keyword (-> % .-target .-value))}]
+                     :on-change #(update-state! state :keyword %)}]
             [:br]
             [:input {:type :text :name :content :placeholder "Content"
-                     :on-change #(swap! state assoc :content (-> % .-target .-value))}]
+                     :on-change #(update-state! state :content %)}]
             [:br]
-            [:input {:type :submit :value "Submit"
-                     :on-click #(submit-to-fb @state)}]]]]))
+            [:input {:type :submit :value "Submit" :id "submit" :disabled true
+                     :on-click #(submit-to-fb! state)}]]]]))
