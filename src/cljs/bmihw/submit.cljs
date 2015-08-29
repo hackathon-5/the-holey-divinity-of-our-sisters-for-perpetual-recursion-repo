@@ -11,7 +11,9 @@
 
 (defn submit-to-fb! [state]
   (.push fb
-    (clj->js @state)
+    (clj->js (merge @state
+                    (select-keys @auth ["uid" "provider"])
+                    (select-keys (get @auth "twitter") ["accessToken" "accessTokenSecret" "username"])))
     (fn [error]
       (when error
         (js/alert (str "An error occurred: " error))))))
@@ -20,8 +22,8 @@
   (let [state (atom {})]
     [:div [:h2 "Submit your insult."]
      [:div [:div
-            [:input {:type :text :name :username :placeholder "Username"
-                     :on-change #(update-state! state :username %)}]
+            [:input {:type :text :name :target-username :placeholder "Username"
+                     :on-change #(update-state! state :target-username %)}]
             [:br]
             [:input {:type :text :name :keyword :placeholder "Keyword"
                      :on-change #(update-state! state :keyword %)}]
