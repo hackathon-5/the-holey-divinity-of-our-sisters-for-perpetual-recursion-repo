@@ -5,51 +5,45 @@
               [goog.events :as events]
               [goog.history.EventType :as EventType]
               [ajax.core :refer [GET POST]]
-              [cljsjs.firebase :as firebase])
+              [cljsjs.firebase :as firebase]
+              [bmihw.common :refer [auth fb]]
+              [bmihw.drunk :as drunk]
+              [bmihw.manage :as manage]
+              [bmihw.submit :as submit])
     (:import goog.History))
-
-(def stuff (atom nil))
-(def fb (js/Firebase. "https://bmihw.firebaseio.com"))
-
-;; -------------------------
-;; WHO KEYWORD
-;; -------------------------
-(defn who-keyword-page
-  []
-  [:div [:h2 "WHO KEYWORD"]
-   [:div [:a {:href "#/"} "go to the home page"]]])
 
 ;; -------------------------
 ;; HOME - LOGIN PAGE
 ;; -------------------------
-(defn auth-twitter-handler
+(defn auth-handler
   [error, authData]
   (if error
-    (reset! stuff error)
+    (reset! auth error)
     (do
-      (reset! stuff authData)
-      (session/put! :current-page #'who-keyword-page))))
+      (reset! auth (js->clj authData))
+      (session/put! :current-page #'drunk/drunk-page))))
 
 (defn auth-twitter
   []
-  (.authWithOAuthPopup fb
-                       "twitter"
-                       auth-twitter-handler))
+  (.authWithOAuthPopup fb "twitter" auth-handler))
+
+(defn auth-github
+  []
+  (.authWithOAuthPopup fb "github" auth-handler))
 
 (defn home-page
   []
-  [:div [:h2 "Welcome to bmihw"]
-   (if @stuff
-     (session/put! :current-page #'who-keyword-page)
-     [:input {:type "button" :value "Login"
-              :on-click #(auth-twitter)}])
-   [:div @stuff]
-   [:div [:a {:href "#/about"} "go to about page"]]])
-
-(defn about-page
-  []
-  [:div [:h2 "About bmihw"]
-   [:div [:a {:href "#/"} "go to the home page"]]])
+  [:div.jumbotron
+   [:h1 "Welcome"]
+   [:p "Are you ready to intelligently express what a bunch of dumbasses the rest of the world is?  Well, are you?"]
+   (if @auth
+     (session/put! :current-page #'submit/submit-page)
+     [:div
+      [:button.btn.btn-primary.btn-lg {:on-click auth-twitter}
+       "Login with Twitter"]
+      " "
+      [:button.btn.btn-primary.btn-lg {:on-click auth-github}
+       "Login with Github"]])])
 
 (defn current-page []
   [:div [(session/get :current-page)]])
@@ -61,8 +55,8 @@
 (secretary/defroute "/" []
   (session/put! :current-page #'home-page))
 
-(secretary/defroute "/about" []
-  (session/put! :current-page #'about-page))
+(secretary/defroute "/submit" []
+  (session/put! :current-page #'submit/submit-page))
 
 ;; -------------------------
 ;; History
