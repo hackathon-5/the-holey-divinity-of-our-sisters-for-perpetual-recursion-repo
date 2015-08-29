@@ -6,7 +6,7 @@
               [goog.history.EventType :as EventType]
               [ajax.core :refer [GET POST]]
               [cljsjs.firebase :as firebase]
-              [bmihw.common :refer [stuff fb]]
+              [bmihw.common :refer [auth fb]]
               [bmihw.submit :as submit])
     (:import goog.History))
 
@@ -16,9 +16,9 @@
 (defn auth-twitter-handler
   [error, authData]
   (if error
-    (reset! stuff error)
+    (reset! auth error)
     (do
-      (reset! stuff authData)
+      (reset! auth (js->clj authData))
       (session/put! :current-page #'submit/submit-page))))
 
 (defn auth-twitter
@@ -30,7 +30,7 @@
 (defn home-page
   []
   [:div [:h2 "Welcome to bmihw"]
-   (if @stuff
+   (if @auth
      (session/put! :current-page #'submit/submit-page)
      [:input {:type "button" :value "Login"
               :on-click #(auth-twitter)}])
