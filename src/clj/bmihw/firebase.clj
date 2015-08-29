@@ -9,6 +9,10 @@
   []
   (.addChildEventListener fb
                           (proxy [ChildEventListener] []
+                            (onCancelled [error])
+                            (onChildMoved [pnsnapshot previousChildName])
+                            (onChildChanged [snapshot previousChildName])
+                            (onChildRemoved [snapshot])
                             (onChildAdded [snapshot previousChildName]
                               (let [insult (->> snapshot
                                                 .getValue
