@@ -3,14 +3,33 @@
               [reagent.session :as session]
               [secretary.core :as secretary :include-macros true]
               [goog.events :as events]
-              [goog.history.EventType :as EventType])
+              [goog.history.EventType :as EventType]
+              [ajax.core :refer [GET POST]]
+              [cljsjs.firebase :as firebase])
     (:import goog.History))
+
+(def stuff (atom nil))
+(def fb (js/Firebase. "https://bmihw.firebaseio.com"))
+
+(defn auth-twitter-handler
+  [error, authData]
+  (if error
+    (reset! stuff error)
+    (reset! stuff authData)))
+
+(defn auth-twitter
+  []
+  (.authWithOAuthPopup fb
+                       "twitter"
+                       auth-twitter-handler))
 
 ;; -------------------------
 ;; Views
-
 (defn home-page []
   [:div [:h2 "Welcome to bmihw"]
+   [:input {:type "button" :value "Auth me!"
+            :on-click #(auth-twitter)}]
+   [:div @stuff]
    [:div [:a {:href "#/about"} "go to about page"]]])
 
 (defn about-page []
