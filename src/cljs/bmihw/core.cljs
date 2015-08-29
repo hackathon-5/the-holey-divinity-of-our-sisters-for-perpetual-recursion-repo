@@ -32,14 +32,9 @@
   [:div [:h2 "Welcome to bmihw"]
    (if @auth
      (session/put! :current-page #'submit/submit-page)
-     [:input {:type "button" :value "Login"
-              :on-click #(auth-twitter)}])
-   [:div [:a {:href "#/about"} "go to about page"]]])
-
-(defn about-page
-  []
-  [:div [:h2 "About bmihw"]
-   [:div [:a {:href "#/"} "go to the home page"]]])
+     [:button {:class "control"
+              :on-click #(auth-twitter)}
+      "Login"])])
 
 (defn current-page []
   [:div [(session/get :current-page)]])
@@ -50,9 +45,6 @@
 
 (secretary/defroute "/" []
   (session/put! :current-page #'home-page))
-
-(secretary/defroute "/about" []
-  (session/put! :current-page #'about-page))
 
 ;; -------------------------
 ;; History

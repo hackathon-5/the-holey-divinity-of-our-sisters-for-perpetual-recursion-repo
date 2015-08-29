@@ -22,14 +22,15 @@
   (let [state (atom {})]
     [:div [:h2 "Submit your insult."]
      [:div [:div
-            [:input {:type :text :name :target-username :placeholder "Username"
+            [:input {:type :text :name :target-username :placeholder "Username" :class "control"
                      :on-change #(update-state! state :target-username %)}]
             [:br]
-            [:input {:type :text :name :keyword :placeholder "Keyword"
+            [:input {:type :text :name :keyword :placeholder "Keyword" :class "control"
                      :on-change #(update-state! state :keyword %)}]
             [:br]
-            [:input {:type :text :name :content :placeholder "Content"
+            [:input {:type :text :name :content :placeholder "Content" :class "control"
                      :on-change #(update-state! state :content %)}]
             [:br]
-            [:input {:type :submit :value "Submit" :id "submit" :disabled true
-                     :on-click #(submit-to-fb! state)}]]]]))
+            [:button {:id "submit" :class "control" :disabled true
+                      :on-click #(submit-to-fb! state)}
+             "Submit"]]]]))
